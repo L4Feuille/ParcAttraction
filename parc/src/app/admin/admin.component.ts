@@ -33,6 +33,7 @@ export class AdminComponent {
           nom: new FormControl(attraction.nom, [Validators.required]),
           description: new FormControl(attraction.description, [Validators.required]),
           difficulte: new FormControl(attraction.difficulte),
+          critique: new FormControl(attraction.critique),
           visible: new FormControl(attraction.visible)
         })
       );
@@ -56,6 +57,7 @@ export class AdminComponent {
         nom: new FormControl("", [Validators.required]),
         description: new FormControl("", [Validators.required]),
         difficulte: new FormControl(),
+        critique: new FormControl(),
         visible: new FormControl(true)
       })
     );

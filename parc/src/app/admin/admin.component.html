@@ -9,6 +9,7 @@
         <span>Description de l'attraction</span>
         <span>Difficulté de l'attraction / 5</span>
         <span>Visible</span>
+        <span>critique</span>
       </div>
     </div>
     <ng-container *ngIf="attractions | async">
@@ -33,6 +34,11 @@
           </mat-form-field>
 
           <mat-slide-toggle class="champ" formControlName="visible">Element visible</mat-slide-toggle>
+
+          <mat-form-field class="champ" appearance="fill">
+            <mat-label>Critique</mat-label>
+            <input matInput formControlName="critique">
+          </mat-form-field>
 
           <button mat-button (click)="onSubmit(formulaireAttraction)" class="champ">Enregistrer</button>
         </div>

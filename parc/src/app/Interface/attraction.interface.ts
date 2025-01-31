@@ -3,5 +3,6 @@ export interface AttractionInterface {
     nom: string,
     description: string, 
     difficulte: number,
-    visible: boolean
+    visible: boolean,
+    critique: string
 }

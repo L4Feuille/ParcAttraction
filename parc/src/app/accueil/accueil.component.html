@@ -6,16 +6,20 @@
     <div class="attraction-title">
       <div class="attraction">
         <span>Nom de l'attraction</span>
-        <span>Description de l'attraction</span>
-        <span>Difficulté de l'attraction / 5</span>
+        <span>Localisation de l'attraction</span>
+        <span>Constructeur de l'attraction</span>
+        <span>Modele de l'attraction</span>
+        <span>Note de l'attraction / 5</span>
         <span>Critique</span>
       </div>
     </div>
     <ng-container *ngFor="let attraction of attractions | async;">
       <div class="attraction" *ngIf="attraction.visible">
         <span>{{attraction.nom}}</span>
-        <span>{{attraction.description}}</span>
-        <span>{{attraction.difficulte}} / 5</span>
+        <span>{{attraction.Localisation}}</span>
+        <span>{{attraction.Constructeur}}</span>
+        <span>{{attraction.Modele}}</span>
+        <span>{{attraction.Note}} / 5</span>
         <span>{{attraction.critique}}</span>
       </div>
     </ng-container>

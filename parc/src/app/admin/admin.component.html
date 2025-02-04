@@ -6,10 +6,11 @@
     <div class="attraction-title">
       <div class="attraction">
         <span>Nom de l'attraction</span>
-        <span>Description de l'attraction</span>
-        <span>Difficulté de l'attraction / 5</span>
-        <span>Visible</span>
-        <span>critique</span>
+        <span>Localisation de l'attraction</span>
+        <span>Constructeur de l'attraction</span>
+        <span>Modele de l'attraction</span>
+        <span>Note de l'attraction / 5</span>
+        <span>Critique</span>
       </div>
     </div>
     <ng-container *ngIf="attractions | async">
@@ -24,13 +25,23 @@
           </mat-form-field>
       
           <mat-form-field class="champ" appearance="fill">
-            <mat-label>Description</mat-label>
-            <input matInput formControlName="description">
+            <mat-label>Localisation</mat-label>
+            <input matInput formControlName="localisation">
+          </mat-form-field>
+
+          <mat-form-field class="champ" appearance="fill">
+            <mat-label>Constructeur</mat-label>
+            <input matInput formControlName="constructeur">
+          </mat-form-field>
+
+          <mat-form-field class="champ" appearance="fill">
+            <mat-label>Modele</mat-label>
+            <input matInput formControlName="modele">
           </mat-form-field>
   
           <mat-form-field class="champ" appearance="fill">
-            <mat-label>Difficulté / 5</mat-label>
-            <input matInput formControlName="difficulte" type="number">
+            <mat-label>Note / 5</mat-label>
+            <input matInput formControlName="note" type="number">
           </mat-form-field>
 
           <mat-slide-toggle class="champ" formControlName="visible">Element visible</mat-slide-toggle>

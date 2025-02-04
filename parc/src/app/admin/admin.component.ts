@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AttractionInterface } from '../Interface/attraction.interface';
 import { AttractionService } from '../Service/attraction.service';
@@ -31,8 +31,10 @@ export class AdminComponent {
         new FormGroup({
           attraction_id: new FormControl(attraction.attraction_id),
           nom: new FormControl(attraction.nom, [Validators.required]),
-          description: new FormControl(attraction.description, [Validators.required]),
-          difficulte: new FormControl(attraction.difficulte),
+          localisation: new FormControl(attraction.localisation, [Validators.required]),
+          constructeur: new FormControl(attraction.constructeur, [Validators.required]),
+          modele: new FormControl(attraction.modele, [Validators.required]),
+          note: new FormControl(attraction.note),
           critique: new FormControl(attraction.critique),
           visible: new FormControl(attraction.visible)
         })

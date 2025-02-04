@@ -4,8 +4,10 @@ CREATE TABLE attraction (
     attraction_id int auto_increment,
     primary key(attraction_id),
     nom varchar(255) not null,
-    description varchar(255) not null,
-    difficulte int,
+    localisation varchar(255) not null,
+    constructeur varchar(255) not null,
+    modele varchar (255) not null, 
+    note int,
     visible bool default true
 );
 

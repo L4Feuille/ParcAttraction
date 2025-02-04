@@ -7,7 +7,7 @@ CREATE TABLE attraction (
     localisation varchar(255) not null,
     constructeur varchar(255) not null,
     modele varchar (255) not null, 
-    note int,
+    classement int,
     visible bool default true
 );
 

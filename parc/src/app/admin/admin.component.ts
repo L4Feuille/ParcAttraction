@@ -34,7 +34,7 @@ export class AdminComponent {
           localisation: new FormControl(attraction.localisation, [Validators.required]),
           constructeur: new FormControl(attraction.constructeur, [Validators.required]),
           modele: new FormControl(attraction.modele, [Validators.required]),
-          note: new FormControl(attraction.note),
+          classement: new FormControl(attraction.classement),
           critique: new FormControl(attraction.critique),
           visible: new FormControl(attraction.visible)
         })
@@ -57,8 +57,10 @@ export class AdminComponent {
       new FormGroup({
         attraction_id: new FormControl(),
         nom: new FormControl("", [Validators.required]),
-        description: new FormControl("", [Validators.required]),
-        difficulte: new FormControl(),
+        localisation: new FormControl("", [Validators.required]),
+        constructeur: new FormControl("", [Validators.required]),
+        modele: new FormControl("", [Validators.required]),
+        classement: new FormControl("",[Validators.required]),
         critique: new FormControl(),
         visible: new FormControl(true)
       })

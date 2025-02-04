@@ -4,7 +4,7 @@ export interface AttractionInterface {
     localisation: string,
     constructeur: string, 
     modele: string, 
-    note: number,
+    classement: number,
     visible: boolean,
     critique: string
 }

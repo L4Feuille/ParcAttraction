@@ -9,8 +9,10 @@
         <span>Localisation de l'attraction</span>
         <span>Constructeur de l'attraction</span>
         <span>Modele de l'attraction</span>
-        <span>Note de l'attraction / 5</span>
+        <span>classement de l'attraction</span>
+        <span>Visible</span>
         <span>Critique</span>
+        <span>Validation</span>
       </div>
     </div>
     <ng-container *ngIf="attractions | async">
@@ -40,8 +42,8 @@
           </mat-form-field>
   
           <mat-form-field class="champ" appearance="fill">
-            <mat-label>Note / 5</mat-label>
-            <input matInput formControlName="note" type="number">
+            <mat-label>classement</mat-label>
+            <input matInput formControlName="classement" type="number">
           </mat-form-field>
 
           <mat-slide-toggle class="champ" formControlName="visible">Element visible</mat-slide-toggle>

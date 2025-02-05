@@ -11,7 +11,6 @@
         <span>Modele de l'attraction</span>
         <span>classement de l'attraction</span>
         <span>Visible</span>
-        <span>Critique</span>
         <span>Validation</span>
       </div>
     </div>
@@ -48,40 +47,38 @@
 
           <mat-slide-toggle class="champ" formControlName="visible">Element visible</mat-slide-toggle>
 
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Critique</mat-label>
-            <input matInput formControlName="critique">
-          </mat-form-field>
-
           <button mat-button (click)="onSubmit(formulaireAttraction)" class="champ">Enregistrer</button>
         </div>
-        <div class="critique-form">
-          <h4>Ajouter une critique :</h4>
-        
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Nom (optionnel)</mat-label>
-            <input matInput formControlName="nom_critique" placeholder="Anonyme">
-          </mat-form-field>
-        
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Prénom (optionnel)</mat-label>
-            <input matInput formControlName="prenom_critique" placeholder="Anonyme">
-          </mat-form-field>
-        
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Note</mat-label>
-            <input matInput formControlName="note_critique" type="number" min="1" max="5">
-          </mat-form-field>
-        
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Votre critique</mat-label>
-            <textarea matInput formControlName="texte_critique"></textarea>
-          </mat-form-field>
-        
-          <button mat-button (click)="onSubmitCritique(formulaireAttraction.value.attraction_id, formulaireAttraction)">
-            Ajouter Critique
-          </button>
-        </div>
+
+        <div class="attraction-title">
+          <div class="critique">
+            <h4>Ajouter une critique :</h4>
+          
+            <mat-form-field class="champ" appearance="fill">
+              <mat-label>Nom (optionnel)</mat-label>
+              <input matInput formControlName="nom_critique" placeholder="Anonyme">
+            </mat-form-field>
+          
+            <mat-form-field class="champ" appearance="fill">
+              <mat-label>Prénom (optionnel)</mat-label>
+              <input matInput formControlName="prenom_critique" placeholder="Anonyme">
+            </mat-form-field>
+          
+            <mat-form-field class="champ" appearance="fill">
+              <mat-label>Note</mat-label>
+              <input matInput formControlName="note_critique" type="number" min="1" max="5">
+            </mat-form-field>
+          
+            <mat-form-field class="champ" appearance="fill">
+              <mat-label>Votre critique</mat-label>
+              <textarea matInput formControlName="texte_critique"></textarea>
+            </mat-form-field>
+          
+            <button mat-button (click)="onSubmitCritique(formulaireAttraction.value.attraction_id, formulaireAttraction)">
+              Ajouter Critique
+            </button>
+          </div>
+        </div>  
       </ng-container>
     </ng-container>
   </mat-card-content>

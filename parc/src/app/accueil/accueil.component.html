@@ -22,7 +22,7 @@
         <span>{{attraction.classement}}</span>
         <div class="critiques">
           <h4>Critiques :</h4>
-          <ng-container *ngFor="let critique of attraction.critiques">
+          <ng-container *ngFor="let critique of attraction.critique">
             <div class="critique">
               <p><strong>{{ critique.nom }} {{ critique.prenom }}</strong> - Note: {{ critique.note }}/5</p>
               <p>{{ critique.texte }}</p>

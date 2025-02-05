@@ -6,5 +6,14 @@ export interface AttractionInterface {
     modele: string, 
     classement: number,
     visible: boolean,
-    critique: string
+    critique?: CritiqueInterface[],
+}
+
+export interface CritiqueInterface{
+    critique_id: number,
+    attraction_id: number,
+    nom?: string,
+    prenom?: string,
+    note: number,
+    texte: string,
 }

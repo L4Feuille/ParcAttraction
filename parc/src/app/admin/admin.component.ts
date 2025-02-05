@@ -66,4 +66,24 @@ export class AdminComponent {
       })
     );
   }
+
+  public addCritique(attractionId:number){
+    this.formulaireAttractions.find(f => f.value.attraction_id === attractionId)?.addControl(
+      'critiqueForm', 
+      new FormGroup({
+        nom: new FormControl('Anonyme'),
+        prenom: new FormControl('Anonyme'),
+        note: new FormControl(5, [Validators.required, Validators.min(1), Validators.max(5)]),
+        texte: new FormControl('', [Validators.required])
+      })
+    );
+  }
+
+  public onSubmitCritique(attractionId: number, critiqueForm: FormGroup) {
+    let critique = { ...critiqueForm.value, attraction_id: attractionId };
+    this.attractionService.postCritiques(critique).subscribe(result => {
+      this._snackBar.open('Critique ajoutée avec succès!', undefined, { duration: 1000 });
+    });
+  }
+
 }

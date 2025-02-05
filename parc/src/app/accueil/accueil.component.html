@@ -20,7 +20,15 @@
         <span>{{attraction.constructeur}}</span>
         <span>{{attraction.modele}}</span>
         <span>{{attraction.classement}}</span>
-        <span>{{attraction.critique}}</span>
+        <div class="critiques">
+          <h4>Critiques :</h4>
+          <ng-container *ngFor="let critique of attraction.critiques">
+            <div class="critique">
+              <p><strong>{{ critique.nom }} {{ critique.prenom }}</strong> - Note: {{ critique.note }}/5</p>
+              <p>{{ critique.texte }}</p>
+            </div>
+          </ng-container>
+        </div>
       </div>
     </ng-container>
   </mat-card-content>

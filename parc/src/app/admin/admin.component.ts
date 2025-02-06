@@ -1,4 +1,4 @@
-import { Component, model } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AttractionInterface } from '../Interface/attraction.interface';
 import { AttractionService } from '../Service/attraction.service';
@@ -67,16 +67,19 @@ export class AdminComponent {
     );
   }
 
-  public addCritique(attractionId:number){
-    this.formulaireAttractions.find(f => f.value.attraction_id === attractionId)?.addControl(
-      'critiqueForm', 
-      new FormGroup({
-        nom: new FormControl('Anonyme'),
-        prenom: new FormControl('Anonyme'),
-        note: new FormControl(5, [Validators.required, Validators.min(1), Validators.max(5)]),
-        texte: new FormControl('', [Validators.required])
-      })
-    );
+  public addCritique(attractionId: number) {
+    const attractionForm = this.formulaireAttractions.find(f => f.value.attraction_id === attractionId);
+    if (attractionForm) {
+      attractionForm.addControl(
+        'critiqueForm',
+        new FormGroup({
+          nom: new FormControl('Anonyme'),
+          prenom: new FormControl('Anonyme'),
+          note: new FormControl(5, [Validators.required, Validators.min(1), Validators.max(5)]),
+          texte: new FormControl('', [Validators.required])
+        })
+      );
+    }
   }
 
   public onSubmitCritique(attractionId: number, critiqueForm: FormGroup) {

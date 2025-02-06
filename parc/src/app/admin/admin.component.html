@@ -1,24 +1,30 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Page administrateur pour <button mat-button (click)="addAttraction()">Ajouter</button>, modifier et supprimer des attractions</mat-card-title>
+    <mat-card-title>
+      Page administrateur pour 
+      <button mat-button (click)="addAttraction()">Ajouter</button>, modifier et supprimer des attractions
+    </mat-card-title>
   </mat-card-header>
   <mat-card-content>
+    
     <div class="attraction-title">
       <div class="attraction">
         <span>Nom de l'attraction</span>
-        <span>Localisation de l'attraction</span>
-        <span>Constructeur de l'attraction</span>
-        <span>Modele de l'attraction</span>
-        <span>classement de l'attraction</span>
+        <span>Localisation</span>
+        <span>Constructeur</span>
+        <span>Modèle</span>
+        <span>Classement</span>
         <span>Visible</span>
         <span>Validation</span>
       </div>
     </div>
+
     <ng-container *ngIf="attractions | async">
       <ng-container *ngFor="let formulaireAttraction of formulaireAttractions; let indexForm = index;"
         [formGroup]="formulaireAttraction"
         style="display: flex; flex-direction: column;"
-      >
+      > 
+      <!-- FORMULAIRE ATTRACTIONS -->
         <div class="attraction">
           <mat-form-field class="champ" appearance="fill">
             <mat-label>Nom</mat-label>
@@ -36,51 +42,56 @@
           </mat-form-field>
 
           <mat-form-field class="champ" appearance="fill">
-            <mat-label>Modele</mat-label>
+            <mat-label>Modèle</mat-label>
             <input matInput formControlName="modele">
           </mat-form-field>
   
           <mat-form-field class="champ" appearance="fill">
-            <mat-label>classement</mat-label>
+            <mat-label>Classement</mat-label>
             <input matInput formControlName="classement" type="number">
           </mat-form-field>
 
-          <mat-slide-toggle class="champ" formControlName="visible">Element visible</mat-slide-toggle>
+          <mat-slide-toggle class="champ" formControlName="visible">Élément visible</mat-slide-toggle>
 
           <button mat-button (click)="onSubmit(formulaireAttraction)" class="champ">Enregistrer</button>
         </div>
 
-        <div class="attraction-title">
-          <div class="critique">
-            <h4>Ajouter une critique :</h4>
-          
+        <!-- FORMULAIRE DE CRITIQUE -->
+        <div class="critique-title">Ajouter une critique :</div>
+        <div class="critique">
+          <form *ngIf="formulaireAttraction.get('critiqueForm') !== null" [formGroup]="formulaireAttraction.get('critiqueForm')">
+            
             <mat-form-field class="champ" appearance="fill">
               <mat-label>Nom (optionnel)</mat-label>
-              <input matInput formControlName="nom_critique" placeholder="Anonyme">
+              <input matInput formControlName="nom">
             </mat-form-field>
           
             <mat-form-field class="champ" appearance="fill">
               <mat-label>Prénom (optionnel)</mat-label>
-              <input matInput formControlName="prenom_critique" placeholder="Anonyme">
+              <input matInput formControlName="prenom">
             </mat-form-field>
           
             <mat-form-field class="champ" appearance="fill">
               <mat-label>Note</mat-label>
-              <input matInput formControlName="note_critique" type="number" min="1" max="5">
+              <input matInput formControlName="note" type="number" min="1" max="5">
             </mat-form-field>
           
             <mat-form-field class="champ" appearance="fill">
               <mat-label>Votre critique</mat-label>
-              <textarea matInput formControlName="texte_critique"></textarea>
+              <textarea matInput formControlName="texte"></textarea>
             </mat-form-field>
           
-            <button mat-button (click)="onSubmitCritique(formulaireAttraction.value.attraction_id, formulaireAttraction)">
+            <button mat-button (click)="onSubmitCritique(formulaireAttraction.value.attraction_id, formulaireAttraction.get('critiqueForm'))">
               Ajouter Critique
             </button>
-          </div>
-        </div>  
+          </form>
+
+          <button mat-button *ngIf="!formulaireAttraction.get('critiqueForm')" (click)="addCritique(formulaireAttraction.value.attraction_id)">
+            Ajouter un avis
+          </button>
+        </div>
       </ng-container>
     </ng-container>
+
   </mat-card-content>
 </mat-card>
-

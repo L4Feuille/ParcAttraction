@@ -5,22 +5,28 @@ def add_attraction(data):
     if (not "nom" in data or data["nom"] == ""):
         return False
     
-    if (not "description" in data or data["description"] == ""):
+    if (not "localisation" in data or data["localisation"] == ""):
         return False
 
-    if (not "difficulte" in data or data["difficulte"] is None):
+    if (not "constructeur" in data or data["constructeur"] == ""):
+        return False
+    
+    if (not "modele" in data or data["modele"] == ""):
+        return False
+    
+    if (not "classement" in data or data["classement"] is None):
         return False
 
     if (not "visible" in data):
         data["visible"] = True
 
     if ("attraction_id" in data and data["attraction_id"]):
-      requete = f"UPDATE attraction SET nom='{data['nom']}', description='{data['description']}', difficulte={data['difficulte']}, visible={data['visible']} WHERE attraction_id = {data['attraction_id']}"
+      requete = f"UPDATE attraction SET nom='{data['nom']}', localisation='{data['localisation']}', constructeur={data['constructeur']}, modele={data['modele']}, classement={data['classement']} WHERE attraction_id = {data['attraction_id']}"
       req.insert_in_db(requete)
       id = data['attraction_id']
     else:
-      requete = "INSERT INTO attraction (nom, description, difficulte, visible) VALUES (?, ?, ?, ?);"
-      id = req.insert_in_db(requete, (data["nom"], data["description"], data["difficulte"], data["visible"]))
+      requete = "INSERT INTO attraction (nom, localisation, constructeur, modele, classement, visible) VALUES (?, ?, ?, ?, ?, ?);"
+      id = req.insert_in_db(requete, (data["nom"], data["localisation"], data["constructeur"], data["modele"],data["classement"], data["visible"]))
 
     return id
 

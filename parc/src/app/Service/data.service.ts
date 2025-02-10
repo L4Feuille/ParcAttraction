@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +9,10 @@ export class DataService {
   
   constructor(private http: HttpClient) { }
 
-  public getData(url: string) {
-    let data = this.http.get(url);
-    return data;
+  getData<T>(url: string): Observable<T> {
+    return this.http.get<T>(url);
   }
+  
 
   public postData(url: string, data: any) {
     let result = this.http.post(url, data);

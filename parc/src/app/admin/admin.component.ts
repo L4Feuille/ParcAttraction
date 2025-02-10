@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AttractionInterface } from '../Interface/attraction.interface';
 import { AttractionService } from '../Service/attraction.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { DataService } from '../Service/data.service';
@@ -15,89 +17,90 @@ import { DataService } from '../Service/data.service';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatButtonModule, MatCardModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatButtonModule, MatCardModule, MatIconModule, FormsModule, BrowserModule ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
+  attractions: AttractionInterface[] = [];
+  attraction: AttractionInterface = this.resetAttraction();
+  selectedFile: File | null = null;
 
-  public formulaireAttractions: FormGroup[] = [];
-  imageUrl: string | null = null;
+  constructor(private dataService: DataService) {}
 
-  constructor(public attractionService: AttractionService, public formBuilder: FormBuilder, private _snackBar: MatSnackBar, private dataService: DataService)
-  {}
-  
-  public attractions: Observable<AttractionInterface[]> = this.attractionService.getAllAttraction().pipe(tap((attractions:AttractionInterface[]) => {
-    attractions.forEach(attraction => {
-      this.formulaireAttractions.push(
-        new FormGroup({
-          attraction_id: new FormControl(attraction.attraction_id),
-          nom: new FormControl(attraction.nom, [Validators.required]),
-          localisation: new FormControl(attraction.localisation, [Validators.required]),
-          constructeur: new FormControl(attraction.constructeur, [Validators.required]),
-          modele: new FormControl(attraction.modele, [Validators.required]),
-          classement: new FormControl(attraction.classement),
-          critique: new FormControl(attraction.critique),
-          visible: new FormControl(attraction.visible)
-        })
-      );
-    });
-  }));
-
-  public onSubmit(attractionFormulaire: FormGroup) {
-    console.log(attractionFormulaire)
-    this.attractionService.postAttraction(attractionFormulaire.getRawValue()).subscribe(result => {
-      attractionFormulaire.patchValue({attraction_id: result.result});
-      this._snackBar.open(result.message, undefined, {
-        duration: 1000
-      });
-    });
+  ngOnInit(): void {
+    this.getAttractions();
   }
 
-  public addAttraction() {
-    this.formulaireAttractions.push(
-      new FormGroup({
-        attraction_id: new FormControl(),
-        nom: new FormControl("", [Validators.required]),
-        localisation: new FormControl("", [Validators.required]),
-        constructeur: new FormControl("", [Validators.required]),
-        modele: new FormControl("", [Validators.required]),
-        classement: new FormControl("",[Validators.required]),
-        critique: new FormControl(),
-        visible: new FormControl(true)
-      })
+  getAttractions(): void {
+    this.dataService.getData<AttractionInterface[]>('http://127.0.0.1:5000/attraction').subscribe(
+      (response: any) => {
+        if (Array.isArray(response)) {
+          this.attractions = response.map(attr => ({
+            ...attr,
+            images: attr.images ?? []
+          }));
+        } else {
+          console.error('Données reçues ne sont pas un tableau', response);
+        }
+      },
+      error => console.error('Erreur lors de la récupération des attractions', error)
     );
   }
 
-  public addCritique(attractionId: number) {
-    const attractionForm = this.formulaireAttractions.find(f => f.value.attraction_id === attractionId);
-    if (attractionForm) {
-      attractionForm.addControl(
-        'critiqueForm',
-        new FormGroup({
-          nom: new FormControl('Anonyme'),
-          prenom: new FormControl('Anonyme'),
-          note: new FormControl(5, [Validators.required, Validators.min(1), Validators.max(5)]),
-          texte: new FormControl('', [Validators.required])
-        })
-      );
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
+  onSubmit(): void {
+    const formData = new FormData();
+    formData.append('nom', this.attraction.nom);
+    formData.append('localisation', this.attraction.localisation);
+    formData.append('constructeur', this.attraction.constructeur);
+    formData.append('modele', this.attraction.modele);
+    formData.append('classement', this.attraction.classement.toString());
+    formData.append('visible', this.attraction.visible.toString());
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
     }
+
+    const url = this.attraction.attraction_id
+      ? `http://127.0.0.1:5000/attraction/${this.attraction.attraction_id}`
+      : 'http://127.0.0.1:5000/attraction';
+
+    this.dataService.postData(url, formData).subscribe(
+      () => {
+        this.getAttractions();
+        this.attraction = this.resetAttraction();
+      },
+      error => console.error('Erreur lors de l’ajout', error)
+    );
   }
 
-  public onSubmitCritique(attractionId: number, critiqueForm: FormGroup) {
-    let critique = { ...critiqueForm.value, attraction_id: attractionId };
-    this.attractionService.postCritiques(critique).subscribe(result => {
-      this._snackBar.open('Critique ajoutée avec succès!', undefined, { duration: 1000 });
-    });
+  editAttraction(attr: AttractionInterface): void {
+    this.attraction = { ...attr };
   }
 
-  public  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.dataService.uploadFile(file).subscribe(response => {
-        this.imageUrl = `http://127.0.0.1:5000${response.path}`;
+  deleteAttraction(attractionId: number | null): void {
+    if (attractionId !== null) {
+      this.dataService.deleteData(`http://127.0.0.1:5000/attraction/${attractionId}`).subscribe(() => {
+        this.attractions = this.attractions.filter(attr => attr.attraction_id !== attractionId);
       });
     }
   }
+  
 
+  resetAttraction(): AttractionInterface {
+    return {
+      attraction_id: 0,
+      nom: '',
+      localisation: '',
+      constructeur: '',
+      modele: '',
+      classement: 0,
+      visible: true,
+      images: []
+    };
+  }
 }

@@ -1,88 +1,66 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Page administrateur pour <button mat-button (click)="addAttraction()">Ajouter</button>, modifier et supprimer des attractions</mat-card-title>
+    <mat-card-title>Page administrateur pour Ajouter, modifier et supprimer des attractions</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="attraction-title">
-      <div class="attraction">
-        <span>Nom de l'attraction</span>
-        <span>Localisation de l'attraction</span>
-        <span>Constructeur de l'attraction</span>
-        <span>Modele de l'attraction</span>
-        <span>classement de l'attraction</span>
-        <span>Visible</span>
-        <span>Validation</span>
+
+    <div class="admin-container">
+      <h1>Gestion des Attractions</h1>
+
+      <!-- Formulaire d'ajout/modification -->
+      <form (ngSubmit)="onSubmit()" class="attraction-form">
+        <mat-form-field>
+          <input matInput placeholder="Nom" [(ngModel)]="attraction.nom" name="nom" required />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Localisation" [(ngModel)]="attraction.localisation" name="localisation" required />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Constructeur" [(ngModel)]="attraction.constructeur" name="constructeur" required />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Modèle" [(ngModel)]="attraction.modele" name="modele" required />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="number" placeholder="Classement" [(ngModel)]="attraction.classement" name="classement" required />
+        </mat-form-field>
+
+        <mat-slide-toggle [(ngModel)]="attraction.visible" name="visible">Visible</mat-slide-toggle>
+
+        <mat-form-field>
+          <input type="file" (change)="onFileSelected($event)" />
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">
+          {{ attraction.attraction_id ? 'Modifier' : 'Ajouter' }} l'Attraction
+        </button>
+      </form>
+
+      <!-- Liste des attractions -->
+      <div class="attractions-list">
+        <mat-card *ngFor="let attr of attractions" class="attraction-card">
+          <img *ngIf="attr.images.length > 0" [src]="attr.images[0].image_url" alt="{{ attr.nom }}" class="attraction-img" />
+          <mat-card-title>{{ attr.nom }}</mat-card-title>
+          <mat-card-content>
+            <p><strong>Localisation :</strong> {{ attr.localisation }}</p>
+            <p><strong>Constructeur :</strong> {{ attr.constructeur }}</p>
+            <p><strong>Modèle :</strong> {{ attr.modele }}</p>
+            <p><strong>Classement :</strong> {{ attr.classement }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-icon-button *ngIf="attr.attraction_id !== null" color="warn" (click)="deleteAttraction(attr.attraction_id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button  color="accent" (click)="editAttraction(attr)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
       </div>
     </div>
-    <ng-container *ngIf="attractions | async">
-      <ng-container *ngFor="let formulaireAttraction of formulaireAttractions; let indexForm = index;"
-        [formGroup]="formulaireAttraction"
-        style="display: flex; flex-direction: column;"
-      >
-        <div class="attraction">
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Nom</mat-label>
-            <input matInput formControlName="nom">
-          </mat-form-field>
-      
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Localisation</mat-label>
-            <input matInput formControlName="localisation">
-          </mat-form-field>
-
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Constructeur</mat-label>
-            <input matInput formControlName="constructeur">
-          </mat-form-field>
-
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>Modele</mat-label>
-            <input matInput formControlName="modele">
-          </mat-form-field>
-  
-          <mat-form-field class="champ" appearance="fill">
-            <mat-label>classement</mat-label>
-            <input matInput formControlName="classement" type="number">
-          </mat-form-field>
-
-          <input type="file" (change)="onFileSelected($event)">
-          <img *ngIf="imageUrl" [src]="imageUrl" alt="Image téléchargée">
-
-          <mat-slide-toggle class="champ" formControlName="visible">Element visible</mat-slide-toggle>
-
-          <button mat-button (click)="onSubmit(formulaireAttraction)" class="champ">Enregistrer</button>
-        </div>
-
-        <div class="attraction-title">
-          <div class="critique">
-            <h4>Ajouter une critique :</h4>
-          
-            <mat-form-field class="champ" appearance="fill">
-              <mat-label>Nom (optionnel)</mat-label>
-              <input matInput formControlName="nom_critique" placeholder="Anonyme">
-            </mat-form-field>
-          
-            <mat-form-field class="champ" appearance="fill">
-              <mat-label>Prénom (optionnel)</mat-label>
-              <input matInput formControlName="prenom_critique" placeholder="Anonyme">
-            </mat-form-field>
-          
-            <mat-form-field class="champ" appearance="fill">
-              <mat-label>Note</mat-label>
-              <input matInput formControlName="note_critique" type="number" min="1" max="5">
-            </mat-form-field>
-          
-            <mat-form-field class="champ" appearance="fill">
-              <mat-label>Votre critique</mat-label>
-              <textarea matInput formControlName="texte_critique"></textarea>
-            </mat-form-field>
-          
-            <button mat-button (click)="onSubmitCritique(formulaireAttraction.value.attraction_id, formulaireAttraction)">
-              Ajouter Critique
-            </button>
-          </div>
-        </div>  
-      </ng-container>
-    </ng-container>
   </mat-card-content>
 </mat-card>

@@ -10,6 +10,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
+import { DataService } from '../Service/data.service';
 
 @Component({
   selector: 'app-admin',
@@ -21,8 +22,9 @@ import { MatCardModule } from '@angular/material/card';
 export class AdminComponent {
 
   public formulaireAttractions: FormGroup[] = [];
+  imageUrl: string | null = null;
 
-  constructor(public attractionService: AttractionService, public formBuilder: FormBuilder, private _snackBar: MatSnackBar)
+  constructor(public attractionService: AttractionService, public formBuilder: FormBuilder, private _snackBar: MatSnackBar, private dataService: DataService)
   {}
   
   public attractions: Observable<AttractionInterface[]> = this.attractionService.getAllAttraction().pipe(tap((attractions:AttractionInterface[]) => {
@@ -87,6 +89,15 @@ export class AdminComponent {
     this.attractionService.postCritiques(critique).subscribe(result => {
       this._snackBar.open('Critique ajoutée avec succès!', undefined, { duration: 1000 });
     });
+  }
+
+  public  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.dataService.uploadFile(file).subscribe(response => {
+        this.imageUrl = `http://127.0.0.1:5000${response.path}`;
+      });
+    }
   }
 
 }

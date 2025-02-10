@@ -45,6 +45,9 @@
             <input matInput formControlName="classement" type="number">
           </mat-form-field>
 
+          <input type="file" (change)="onFileSelected($event)">
+          <img *ngIf="imageUrl" [src]="imageUrl" alt="Image téléchargée">
+
           <mat-slide-toggle class="champ" formControlName="visible">Element visible</mat-slide-toggle>
 
           <button mat-button (click)="onSubmit(formulaireAttraction)" class="champ">Enregistrer</button>

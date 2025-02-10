@@ -7,7 +7,7 @@ export interface AttractionInterface {
     classement: number,
     visible: boolean,
     critique?: CritiqueInterface[],
-    imageUrl?: string,
+    images: { image_url: string }[];
 }
 
 export interface CritiqueInterface{

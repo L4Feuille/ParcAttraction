@@ -1,34 +1,20 @@
 import request.request as req
 
 def add_attraction(data):
-    print(data, flush=True)
-    if (not "nom" in data or data["nom"] == ""):
-        return False
-    
-    if (not "localisation" in data or data["localisation"] == ""):
+    """ Ajoute une attraction avec une image optionnelle """
+    if not all(k in data for k in ["nom", "localisation", "constructeur", "modele", "classement"]):
         return False
 
-    if (not "constructeur" in data or data["constructeur"] == ""):
-        return False
-    
-    if (not "modele" in data or data["modele"] == ""):
-        return False
-    
-    if (not "classement" in data or data["classement"] is None):
-        return False
+    data.setdefault("visible", True)
+    data.setdefault("image_url", "")
 
-    if (not "visible" in data):
-        data["visible"] = True
-
-    if ("attraction_id" in data and data["attraction_id"]):
-      requete = f"UPDATE attraction SET nom='{data['nom']}', localisation='{data['localisation']}', constructeur={data['constructeur']}, modele={data['modele']}, classement={data['classement']} WHERE attraction_id = {data['attraction_id']}"
-      req.insert_in_db(requete)
-      id = data['attraction_id']
+    if "attraction_id" in data and data["attraction_id"]:
+        requete = "UPDATE attraction SET nom=?, localisation=?, constructeur=?, modele=?, classement=?, image_url=? WHERE attraction_id=?"
+        req.update_from_db(requete, (data["nom"], data["localisation"], data["constructeur"], data["modele"], data["classement"], data["image_url"], data["attraction_id"]))
+        return data["attraction_id"]
     else:
-      requete = "INSERT INTO attraction (nom, localisation, constructeur, modele, classement, visible) VALUES (?, ?, ?, ?, ?, ?);"
-      id = req.insert_in_db(requete, (data["nom"], data["localisation"], data["constructeur"], data["modele"],data["classement"], data["visible"]))
-
-    return id
+        requete = "INSERT INTO attraction (nom, localisation, constructeur, modele, classement, visible, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        return req.insert_in_db(requete, (data["nom"], data["localisation"], data["constructeur"], data["modele"], data["classement"], data["visible"], data["image_url"]))
 
 def get_all_attraction():
     json = req.select_from_db("SELECT * FROM attraction")

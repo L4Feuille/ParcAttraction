@@ -1,12 +1,25 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
+from werkzeug.utils import secure_filename
 
+import os
 import request.request as req
 import controller.auth.auth as user
 import controller.attraction as attraction
 
 app = Flask(__name__)
 CORS(app)
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+def allowed_file(filename):
+    """ Vérifie si le fichier a une extension autorisée """
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def hello_world():
@@ -29,8 +42,13 @@ def addAttraction():
 
 @app.get('/attraction')
 def getAllAttraction():
-    result = attraction.get_all_attraction()
-    return result, 200
+    """ Récupère toutes les attractions avec leurs images associées """
+    attractions = attraction.get_all_attraction()
+
+    for a in attractions:
+        a["images"] = req.select_from_db("SELECT image_url FROM images WHERE attraction_id = ?", (a["attraction_id"],))
+    
+    return jsonify(attractions), 200
 
 @app.get('/attraction/<int:index>')
 def getAttraction(index):
@@ -67,3 +85,44 @@ def login():
 
     result = jsonify({"token": user.encode_auth_token(list(records[0])[0]), "name": json['name']})
     return result, 200
+
+@app.post('/upload/<int:attraction_id>')
+def upload_file(attraction_id):
+    """ Upload plusieurs images pour une attraction """
+    if 'file' not in request.files:
+        return jsonify({"message": "Aucun fichier envoyé"}), 400
+
+    files = request.files.getlist('file')
+    image_urls = []
+
+    for file in files:
+        if file.filename == '':
+            continue
+        
+        if file and allowed_file(file.filename):
+            filename = secure_filename(f"{attraction_id}_{file.filename}")
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+
+            # Enregistrer l'image en base de données
+            image_url = f"/images/{filename}"
+            req.insert_in_db("INSERT INTO images (attraction_id, image_url) VALUES (?, ?)", (attraction_id, image_url))
+            image_urls.append(image_url)
+
+    return jsonify({"message": "Images uploadées", "image_urls": image_urls}), 200
+
+@app.get('/attraction/<int:attraction_id>/images')
+def get_images(attraction_id):
+    """ Récupère toutes les images d’une attraction """
+    images = req.select_from_db("SELECT image_url FROM images WHERE attraction_id = ?", (attraction_id,))
+    return jsonify(images), 200
+
+
+@app.get('/images/<filename>')
+def get_image(filename):
+    """ Permet de récupérer une image """
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+# ---------- EXÉCUTION ---------- #
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)

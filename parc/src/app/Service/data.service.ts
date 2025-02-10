@@ -22,4 +22,11 @@ export class DataService {
     let result = this.http.delete(url);
     return result;
   }
+
+  public uploadFile(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ message: string; path: string }>('http://127.0.0.1:5000/upload', formData);
+  }
+  
 }

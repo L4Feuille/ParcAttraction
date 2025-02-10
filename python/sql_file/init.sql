@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS critiques;
 DROP TABLE IF EXISTS attraction;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS images;
 
 
 CREATE TABLE attraction (
@@ -30,3 +31,14 @@ CREATE TABLE critiques (
     texte TEXT NOT NULL,
     FOREIGN KEY (attraction_id) REFERENCES attraction(attraction_id) ON DELETE CASCADE
 );
+
+CREATE TABLE images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    attraction_id INT NOT NULL,
+    image_url TEXT NOT NULL,
+    FOREIGN KEY (attraction_id) REFERENCES attraction(attraction_id) ON DELETE CASCADE
+);
+
+
+
+ALTER TABLE attraction ADD COLUMN image_url TEXT;

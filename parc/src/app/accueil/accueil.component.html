@@ -11,7 +11,11 @@
             <mat-card-title>{{ attraction.nom }}</mat-card-title>
             <mat-card-subtitle>{{ attraction.localisation }}</mat-card-subtitle>
           </mat-card-header>
-          <img mat-card-image [src]="attraction.imageUrl" alt="Image de {{ attraction.nom }}">
+          <div class="image-gallery">
+            <img *ngFor="let img of attraction.images" 
+                 [src]="'http://127.0.0.1:5000' + img.image_url" 
+                 alt="Attraction Image" />
+          </div>
           <mat-card-content>
             <p><strong>Constructeur:</strong> {{ attraction.constructeur }}</p>
             <p><strong>Modèle:</strong> {{ attraction.modele }}</p>

@@ -1,66 +1,64 @@
-<mat-card>
+<mat-card class="admin-container">
   <mat-card-header>
-    <mat-card-title>Page administrateur pour Ajouter, modifier et supprimer des attractions</mat-card-title>
+    <mat-card-title>Gestion des Attractions</mat-card-title>
   </mat-card-header>
   <mat-card-content>
+    
+    <form [formGroup]="attractionForm" (ngSubmit)="onSubmit()" class="attraction-form">
+      <mat-form-field>
+        <input matInput placeholder="Nom" formControlName="nom" required />
+      </mat-form-field>
 
-    <div class="admin-container">
-      <h1>Gestion des Attractions</h1>
+      <mat-form-field>
+        <input matInput placeholder="Localisation" formControlName="localisation" required />
+      </mat-form-field>
 
-      <!-- Formulaire d'ajout/modification -->
-      <form (ngSubmit)="onSubmit()" class="attraction-form">
-        <mat-form-field>
-          <input matInput placeholder="Nom" [(ngModel)]="attraction.nom" name="nom" required />
-        </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Constructeur" formControlName="constructeur" required />
+      </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Localisation" [(ngModel)]="attraction.localisation" name="localisation" required />
-        </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Modèle" formControlName="modele" required />
+      </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Constructeur" [(ngModel)]="attraction.constructeur" name="constructeur" required />
-        </mat-form-field>
+      <mat-form-field>
+        <input matInput type="number" placeholder="Classement" formControlName="classement" required />
+      </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Modèle" [(ngModel)]="attraction.modele" name="modele" required />
-        </mat-form-field>
+      <!-- Bouton visibilité -->
+      <mat-slide-toggle formControlName="visible" class="visibility-btn">Visible</mat-slide-toggle>
 
-        <mat-form-field>
-          <input matInput type="number" placeholder="Classement" [(ngModel)]="attraction.classement" name="classement" required />
-        </mat-form-field>
+      <!-- Bouton d'ajout d'image -->
+      <label class="upload-btn">
+        <mat-icon>upload</mat-icon> Ajouter une image
+        <input type="file" (change)="onFileSelected($event)" hidden />
+      </label>
 
-        <mat-slide-toggle [(ngModel)]="attraction.visible" name="visible">Visible</mat-slide-toggle>
+      <button mat-raised-button color="primary" type="submit">
+        {{ attractionForm.get('attraction_id')?.value ? 'Modifier' : 'Ajouter' }} l'Attraction
+      </button>
+    </form>
 
-        <mat-form-field>
-          <input type="file" (change)="onFileSelected($event)" />
-        </mat-form-field>
-
-        <button mat-raised-button color="primary" type="submit">
-          {{ attraction.attraction_id ? 'Modifier' : 'Ajouter' }} l'Attraction
-        </button>
-      </form>
-
-      <!-- Liste des attractions -->
-      <div class="attractions-list">
-        <mat-card *ngFor="let attr of attractions" class="attraction-card">
-          <img *ngIf="attr.images.length > 0" [src]="attr.images[0].image_url" alt="{{ attr.nom }}" class="attraction-img" />
-          <mat-card-title>{{ attr.nom }}</mat-card-title>
-          <mat-card-content>
-            <p><strong>Localisation :</strong> {{ attr.localisation }}</p>
-            <p><strong>Constructeur :</strong> {{ attr.constructeur }}</p>
-            <p><strong>Modèle :</strong> {{ attr.modele }}</p>
-            <p><strong>Classement :</strong> {{ attr.classement }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-icon-button *ngIf="attr.attraction_id !== null" color="warn" (click)="deleteAttraction(attr.attraction_id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-icon-button  color="accent" (click)="editAttraction(attr)">
-              <mat-icon>edit</mat-icon>
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
+    <div class="attractions-list">
+      <mat-card *ngFor="let attr of attractions" class="attraction-card">
+        <img *ngIf="attr.images.length > 0" [src]="attr.images[0].image_url" alt="{{ attr.nom }}" class="attraction-img" />
+        <mat-card-title>{{ attr.nom }}</mat-card-title>
+        <mat-card-content>
+          <p><strong>Localisation :</strong> {{ attr.localisation }}</p>
+          <p><strong>Constructeur :</strong> {{ attr.constructeur }}</p>
+          <p><strong>Modèle :</strong> {{ attr.modele }}</p>
+          <p><strong>Classement :</strong> {{ attr.classement }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-icon-button color="warn" (click)="deleteAttraction(attr.attraction_id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="editAttraction(attr)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
     </div>
+
   </mat-card-content>
 </mat-card>

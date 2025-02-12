@@ -57,17 +57,17 @@ def getAttraction(index):
 
 @app.delete('/attraction/<int:index>')
 def deleteAttraction(index):
-
-    # Fonction vérif token
-    checkToken = user.check_token(request)
-    if (checkToken != True):
-        return checkToken
-
-    json = request.get_json()
     
-    if (attraction.delete_attraction(index)):
-        return "Element supprimé.", 200
-    return jsonify({"message": "Erreur lors de la suppression."}), 500
+    checkToken = user.check_token(request)
+    if checkToken != True:
+        return checkToken
+    
+    req.delete_from_db("DELETE FROM images WHERE attraction_id = ?", (index,))
+    
+    if attraction.delete_attraction(index):
+        return "Attraction supprimée avec succès.", 200
+    return jsonify({"message": "Erreur lors de la suppression de l'attraction."}), 500
+
 
 @app.post('/login')
 def login():

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { AttractionService } from '../Service/attraction.service';
+import { CritiqueService } from '../Service/critique.service';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { AttractionInterface } from '../Interface/attraction.interface';
+import { CritiqueInterface } from '../Interface/critique.interface';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -14,8 +16,10 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class AccueilComponent {
 
-  constructor(public attractionService: AttractionService)
+  constructor(public attractionService: AttractionService, public critiqueService: CritiqueService)
   {}
   
   public attractions: Observable<AttractionInterface[]> = this.attractionService.getAllAttraction()
+  public critiques :  Observable<CritiqueInterface[]> = this.critiqueService.getAllCritique()
+
 }

@@ -1,33 +1,21 @@
-<mat-card class="accueil-container">
-  <mat-card-header class="header">
-    <mat-card-title>Bienvenue dans le Parc d'Attractions ! Découvrez les meilleures attractions et laissez vos avis !</mat-card-title>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Bienvenue sur le site internet du parc d'attraction</mat-card-title>
   </mat-card-header>
-  
   <mat-card-content>
-    <div class="attractions-grid">
-      <ng-container *ngFor="let attraction of attractions | async">
-        <mat-card class="attraction-card" *ngIf="attraction.visible">
-          <mat-card-header>
-            <mat-card-title>{{ attraction.nom }}</mat-card-title>
-            <mat-card-subtitle>{{ attraction.localisation }}</mat-card-subtitle>
-          </mat-card-header>
-          <div class="image-gallery">
-            <img *ngFor="let img of attraction.images" 
-                 [src]="'http://127.0.0.1:5000' + img.image_url" 
-                 alt="Attraction Image" />
-          </div>
-          <mat-card-content>
-            <p><strong>Constructeur:</strong> {{ attraction.constructeur }}</p>
-            <p><strong>Modèle:</strong> {{ attraction.modele }}</p>
-            <p><strong>Classement:</strong> #{{ attraction.classement }}</p>
-            <p><strong>Avis:</strong></p>
-            <ul *ngIf="attraction.critique?.length">
-              <li *ngFor="let critique of attraction.critique">"{{ critique.texte }}" - Note: {{ critique.note }}/5</li>
-            </ul>
-            <p *ngIf="!attraction.critique?.length">Aucun avis pour cette attraction.</p>
-          </mat-card-content>
-        </mat-card>
-      </ng-container>
+    <div class="attraction-title">
+      <div class="attraction">
+        <span>Nom de l'attraction</span>
+        <span>Description de l'attraction</span>
+        <span>Difficulté de l'attraction / 5</span>
+      </div>
     </div>
+    <ng-container *ngFor="let attraction of attractions | async;">
+      <div class="attraction">
+        <span>{{attraction.nom}}</span>
+        <span>{{attraction.description}}</span>
+        <span>{{attraction.difficulte}} / 5</span>
+      </div>
+    </ng-container>
   </mat-card-content>
 </mat-card>

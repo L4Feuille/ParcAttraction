@@ -1,108 +1,63 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { AttractionInterface } from '../Interface/attraction.interface';
+import { AttractionService } from '../Service/attraction.service';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AttractionInterface } from '../Interface/attraction.interface';
-import { DataService } from '../Service/data.service';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [
-    CommonModule, ReactiveFormsModule, FormsModule,
-    MatFormFieldModule, MatInputModule, MatSlideToggleModule,
-    MatButtonModule, MatCardModule, MatIconModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatButtonModule, MatCardModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
-export class AdminComponent implements OnInit {
-  attractions: AttractionInterface[] = [];
-  attractionForm: FormGroup;
-  selectedFile: File | null = null;
+export class AdminComponent {
 
-  constructor(
-    private dataService: DataService,
-    private formBuilder: FormBuilder,
-    private _snackBar: MatSnackBar
-  ) {
-    this.attractionForm = this.formBuilder.group({
-      attraction_id: [null],
-      nom: ['', Validators.required],
-      localisation: ['', Validators.required],
-      constructeur: ['', Validators.required],
-      modele: ['', Validators.required],
-      classement: [0, Validators.required],
-      visible: [true],
-      image: [null]
+  public formulaireAttractions: FormGroup[] = [];
+
+  constructor(public attractionService: AttractionService, public formBuilder: FormBuilder, private _snackBar: MatSnackBar)
+  {}
+  
+  public attractions: Observable<AttractionInterface[]> = this.attractionService.getAllAttraction().pipe(tap((attractions:AttractionInterface[]) => {
+    attractions.forEach(attraction => {
+      this.formulaireAttractions.push(
+        new FormGroup({
+          attraction_id: new FormControl(attraction.attraction_id),
+          nom: new FormControl(attraction.nom, [Validators.required]),
+          description: new FormControl(attraction.description, [Validators.required]),
+          difficulte: new FormControl(attraction.difficulte),
+          visible: new FormControl(attraction.visible)
+        })
+      );
     });
-  }
+  }));
 
-  ngOnInit(): void {
-    this.getAttractions();
-  }
-
-  getAttractions(): void {
-    this.dataService.getData<AttractionInterface[]>('http://127.0.0.1:5000/attraction').subscribe(
-      (response: any) => {
-        if (Array.isArray(response)) {
-          this.attractions = response.map(attr => ({
-            ...attr,
-            images: attr.images ?? []
-          }));
-        } else {
-          console.error('Données reçues ne sont pas un tableau', response);
-        }
-      },
-      error => console.error('Erreur lors de la récupération des attractions', error)
-    );
-  }
-
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
-  }
-
-  onSubmit(): void {
-    const formData = new FormData();
-    Object.keys(this.attractionForm.controls).forEach(key => {
-      formData.append(key, this.attractionForm.get(key)?.value);
-    });
-
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
-
-    const url = this.attractionForm.get('attraction_id')?.value
-      ? `http://127.0.0.1:5000/attraction/${this.attractionForm.get('attraction_id')?.value}`
-      : 'http://127.0.0.1:5000/attraction';
-
-    this.dataService.postData(url, formData).subscribe(
-      () => {
-        this.getAttractions();
-        this.attractionForm.reset();
-        this.attractionForm.patchValue({ visible: true });
-        this.selectedFile = null;
-      },
-      error => console.error('Erreur lors de l’ajout', error)
-    );
-  }
-
-  editAttraction(attr: AttractionInterface): void {
-    this.attractionForm.patchValue(attr);
-  }
-
-  deleteAttraction(attractionId: number | null): void {
-    if (attractionId !== null) {
-      this.dataService.deleteData(`http://127.0.0.1:5000/attraction/${attractionId}`).subscribe(() => {
-        this.attractions = this.attractions.filter(attr => attr.attraction_id !== attractionId);
+  public onSubmit(attractionFormulaire: FormGroup) {
+    console.log(attractionFormulaire)
+    this.attractionService.postAttraction(attractionFormulaire.getRawValue()).subscribe(result => {
+      attractionFormulaire.patchValue({attraction_id: result.result});
+      this._snackBar.open(result.message, undefined, {
+        duration: 1000
       });
-    }
+    });
+  }
+
+  public addAttraction() {
+    this.formulaireAttractions.push(
+      new FormGroup({
+        attraction_id: new FormControl(),
+        nom: new FormControl("", [Validators.required]),
+        description: new FormControl("", [Validators.required]),
+        difficulte: new FormControl(),
+        visible: new FormControl(true)
+      })
+    );
   }
 }

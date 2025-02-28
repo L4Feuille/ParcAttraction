@@ -1,112 +1,24 @@
-.admin-container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  text-align: center;
-  font-size: 22px;
-  color: #333;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-.attraction-form {
-  display: grid;
-  gap: 15px;
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-mat-form-field {
-  width: 100%;
-}
-
-mat-slide-toggle {
-  margin: 10px 0;
-}
-
-// Bouton sobre pour l’upload d’image
-.upload-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border-radius: 5px;
-  background: #f1f1f1;
-  color: #333;
-  font-size: 14px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-
-  &:hover {
-    background: #e1e1e1;
-  }
-
-  mat-icon {
-    margin-right: 5px;
-  }
-
-  input {
-    display: none;
-  }
-}
-
-button {
-  width: 100%;
-  background-color: #007BFF;
-  color: white;
+.attraction-title {
+  font-size: 18px;
   font-weight: 500;
-  padding: 8px;
-  border-radius: 5px;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background-color: #0056b3;
-  }
+  background-color: darkgrey;
+  width: fit-content;
+  margin-top: 25px;
 }
-
-.attractions-list {
-  display: grid;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.attraction-card {
-  padding: 15px;
-  background: #fff;
-  border-radius: 6px;
-  border: 1px solid #ddd;
+.attraction {
   display: flex;
-  flex-direction: column;
   align-items: center;
-}
+  column-gap: 25px;
+  width: fit-content;
 
-.attraction-img {
-  width: 100%;
-  max-height: 180px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-mat-card-actions {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding-top: 10px;
-}
-
-button.mat-icon-button {
-  background: transparent;
-  color: #333;
-
-  &:hover {
-    color: #007BFF;
+  border-bottom: solid 1px grey;
+  span {
+    padding: 5px;
+    width: 250px;
+  }
+  .champ {
+    padding: 5px;
+    margin-top: 21.5px;
+    width: 250px;
   }
 }

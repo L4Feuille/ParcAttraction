@@ -1,20 +1,28 @@
 import request.request as req
 
 def add_attraction(data):
-    """ Ajoute une attraction avec une image optionnelle """
-    if not all(k in data for k in ["nom", "localisation", "constructeur", "modele", "classement"]):
+    print(data, flush=True)
+    if (not "nom" in data or data["nom"] == ""):
+        return False
+    
+    if (not "description" in data or data["description"] == ""):
         return False
 
-    data.setdefault("visible", True)
-    data.setdefault("image_url", "")
+    if (not "difficulte" in data or data["difficulte"] is None):
+        return False
 
-    if "attraction_id" in data and data["attraction_id"]:
-        requete = "UPDATE attraction SET nom=?, localisation=?, constructeur=?, modele=?, classement=?, image_url=? WHERE attraction_id=?"
-        req.update_from_db(requete, (data["nom"], data["localisation"], data["constructeur"], data["modele"], data["classement"], data["image_url"], data["attraction_id"]))
-        return data["attraction_id"]
+    if (not "visible" in data):
+        data["visible"] = True
+
+    if ("attraction_id" in data and data["attraction_id"]):
+      requete = f"UPDATE attraction SET nom='{data['nom']}', description='{data['description']}', difficulte={data['difficulte']}, visible={data['visible']} WHERE attraction_id = {data['attraction_id']}"
+      req.insert_in_db(requete)
+      id = data['attraction_id']
     else:
-        requete = "INSERT INTO attraction (nom, localisation, constructeur, modele, classement, visible, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)"
-        return req.insert_in_db(requete, (data["nom"], data["localisation"], data["constructeur"], data["modele"], data["classement"], data["visible"], data["image_url"]))
+      requete = "INSERT INTO attraction (nom, description, difficulte, visible) VALUES (?, ?, ?, ?);"
+      id = req.insert_in_db(requete, (data["nom"], data["description"], data["difficulte"], data["visible"]))
+
+    return id
 
 def get_all_attraction():
     json = req.select_from_db("SELECT * FROM attraction")

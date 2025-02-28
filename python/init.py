@@ -21,7 +21,7 @@ try:
             line = re.sub("\s+", " ", line)
             if (line != ""):
                 texte = cur.execute(line)
-    conn.commit()
+
     with open('sql_file/create.sql') as f:
         fichier = f.read()
         lines = fichier.split(";")

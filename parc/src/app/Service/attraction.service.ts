@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { DataService } from './data.service';
-import { AttractionInterface, CritiqueInterface } from '../Interface/attraction.interface';
+import { AttractionInterface } from '../Interface/attraction.interface';
+import { CritiqueInterface } from '../Interface/critique.interface';
 import { MessageInterface } from '../Interface/message.interface';
 
 @Injectable({
